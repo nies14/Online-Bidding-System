@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>
+	</title>
+	<link rel = "stylesheet" href="cssLogin.css">
+	<link rel = "stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+	<script>
+		function verify() 
+		{
+			//alert("ddd");
+			str=document.getElementById("un").value;
+			str1=document.getElementById("pass").value;
+			//document.getElementById("spinner").style.visibility= "visible";
+			var xmlhttp = new XMLHttpRequest();
+			var flag=-1;
+			xmlhttp.onreadystatechange = function() 
+			{
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) 
+				{
+					resp=JSON.parse(xmlhttp.responseText);
+					msg="";
+					for(i=0;i<resp.length;i++)
+					{
+						//alert(resp[i].password);
+						if(resp[i].username==str && resp[i].password==str1)
+						{
+							flag=i;
+							break;
+						}
+						else
+						{
+							flag=-1;
+						}
+					}
+					
+					if(flag>-1)
+					{
+						if(!('foo' in resp[flag]) && resp[flag].position=="admin")
+						{
+							location.href="AdminHome(h).php";
+						}
+						else if(!('foo' in resp[flag]) && resp[flag].position=="employee")
+						{
+							location.href="EmployeeHome(h).php";
+						}
+						else
+						{
+							location.href="CustomerHome(h).php";
+						}
+					}
+					
+					/*if(flag==-1)
+					{
+							flag2=-1;
+							var xmlhttp1 = new XMLHttpRequest();
+							xmlhttp1.onreadystatechange = function() 
+							{
+								if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) 
+								{
+									resp=JSON.parse(xmlhttp1.responseText);
+									msg="";
+									for(i=0;i<resp.length;i++)
+									{
+										//alert(resp[i].username);
+										if(resp[i].username==str && resp[i].password==str1)
+										{
+											flag2=i;
+											break;
+										}
+										else
+										{
+											flag2=-1;
+										}
+									}
+									
+									if(flag2>-1)
+									{
+										alert("customer");
+										location.href="CustomerHome(h).php";
+									}
+								}
+							};
+							//alert(flag);
+							
+							var url="login2.php?un="+str;//+"&ps="+str1;
+							//alert(url);
+							xmlhttp.open("GET", url, true);
+							xmlhttp.send();
+					}*/
+						
+					if(flag==-1)
+					{
+						msg = "wrong credential";
+						document.getElementById("crd").style.color = "red";
+					}
+					document.getElementById("crd").innerHTML = msg;
+				}
+			};
+			
+			var url="login.php?un="+str+"&pn="+str1;
+			//alert(url);
+			xmlhttp.open("GET", url, true);
+			xmlhttp.send();
+		}
+	</script>
+</head>
+<body>
+	<div class="container">
+		<img src="man.png">
+		<form method="post" name="form">
+			<div class="form-input">
+				<input type="text" id="un" name="username" placeholder="Enter Username">
+			</div>
+			<div class="form-input">
+				<input type="password" id="pass" name="password" placeholder="Enter Password">
+			</div>
+			</br>
+			<input type="button" value="LOGIN" class="btn-login" onclick="verify()">
+			<br/>
+			<p id="crd"></p>
+			<br/>
+			<a href="#">Forget Password?</a>
+		</form>
+	</div>
+</body>
+</html>
+
